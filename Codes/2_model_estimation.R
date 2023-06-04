@@ -44,7 +44,7 @@ library(stringr)
 setwd(here())
 
 # === Load functions ===#
-fs::dir_ls(here("GitControlled/Codes/Functions"), full.names = TRUE) %>%
+fs::dir_ls(here("Codes/Functions"), full.names = TRUE) %>%
   lapply(., function(x) source(x))
 
 
@@ -55,7 +55,7 @@ fs::dir_ls(here("GitControlled/Codes/Functions"), full.names = TRUE) %>%
 ################################################################################
 
 # === load simulated reg data ===#
-field_with_design <- readRDS(here("Shared/Data/field_with_design.rds"))
+field_with_design <- readRDS(here("Data/field_with_design.rds"))
 
 
 # /*=================================================*/
@@ -63,8 +63,8 @@ field_with_design <- readRDS(here("Shared/Data/field_with_design.rds"))
 # /*=================================================*/
 
 #* range of simulations
-r1 = 700
-r2 = 775
+r1 = 0
+r2 = 1000
 
 #* estimate yield responses and EONRs
 tic()
@@ -77,30 +77,9 @@ mc_sim_results <-
 toc()
 
 #* save the field parameters
-saveRDS(mc_sim_results, here("Shared/Results", 
+saveRDS(mc_sim_results, here("Results", 
                              paste0("mc_sim_results_", r1+1, "-", r2, ".rds")))
 
-
-#**************************************
-#* combine simulation data
-{
-    r1 = 900
-    r2 = 1000
-    mc_sim_results <- readRDS(here("Shared/Results",
-                                   paste0("mc_sim_results_", 1, "-", r1, ".rds")))
-    mc_sim_results_i <- readRDS(here("Shared/Results",
-                                     paste0("mc_sim_results_", r1+1, "-", r2, ".rds")))
-
-    for(i in 1:nrow(mc_sim_results)){
-        mc_sim_results$sim_results[[i]] <-
-            rbind(mc_sim_results$sim_results[[i]],
-                  mc_sim_results_i$sim_results[[i]])
-
-    }
-    saveRDS(mc_sim_results, here("Shared/Results",
-                                 paste0("mc_sim_results_", 1, "-", r2, ".rds")))
-}
-#**************************************
 
 
 
@@ -111,10 +90,10 @@ saveRDS(mc_sim_results, here("Shared/Results",
 ################################################################################
 
 # === load field data ===#
-field_data <- readRDS(here("Shared/Data/field_data.rds"))
+field_data <- readRDS(here("Data/field_data.rds"))
 
 # === load true parameters ===#
-cell_data <- readRDS(here("Shared/Data/field_parameters.rds")) %>%
+cell_data <- readRDS(here("Data/field_parameters.rds")) %>%
   rowwise() %>%
   # === match cell_id and aunit_id ===#
   mutate(
@@ -233,7 +212,7 @@ object.size(pi_data) / 1024^2
 
 
 
-saveRDS(pi_data, here("Shared/Results/pi_data.rds"))
+saveRDS(pi_data, here("Results/pi_data.rds"))
 
 
 
@@ -248,7 +227,7 @@ spatial_measure_results <-
     ) %>%
     rbindlist()
 toc()
-saveRDS(spatial_measure_results, here("Shared/Results/spatial_measure_results.rds"))
+saveRDS(spatial_measure_results, here("Results/spatial_measure_results.rds"))
 
 
 

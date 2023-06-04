@@ -30,7 +30,7 @@ setwd(here())
 
 # === load functions ===#
 #* source all the functions in the Functions folder
-fs::dir_ls(here("GitControlled/Codes/Functions"), full.names = TRUE) %>%
+fs::dir_ls(here("Codes/Functions"), full.names = TRUE) %>%
   lapply(., function(x) source(x))
 
 
@@ -70,7 +70,7 @@ field_data <-
     #* price ratio scenarios
     pCorn = 7 / 25.4, # $/kg
     pRatio_ls = list(
-        readRDS(here("Shared/Data/price_ratio_data.rds")) %>% 
+        readRDS(here("Data/price_ratio_data.rds")) %>% 
             pull(pRatio) %>% 
             quantile(c(0.05, 0.5, 0.95), na.rm=TRUE) %>% 
             round(3)
@@ -79,7 +79,7 @@ field_data <-
 
 
 #* save the fields
-saveRDS(field_data, here("Shared/Data/field_data.rds"))
+saveRDS(field_data, here("Data/field_data.rds"))
 
 # /*===========================================================
 #' # Add trial design layout by design
@@ -111,21 +111,21 @@ field_with_design <-
   mutate(
     data_file_name =
       paste0(
-        "Shared/Data/",
+        "Data/",
         stringr::str_replace_all(design_name, " ", ""),
         "_", field_col, ".rds"
       )
   )
 
 #* save the fields with designs
-saveRDS(field_with_design, here("Shared/Data/field_with_design.rds"))
+saveRDS(field_with_design, here("Data/field_with_design.rds"))
 
 # /*===========================================================
 #' # Generate true parameters
 # /*===========================================================
 
 field_parameters <-
-  readRDS(here("Shared/Data/field_data.rds")) %>%
+  readRDS(here("Data/field_data.rds")) %>%
   mutate(field_pars = list(
     gen_field_pars(
       sp_range = sp_range,
@@ -136,16 +136,13 @@ field_parameters <-
   ))
 
 #* save the field parameters
-saveRDS(field_parameters, here("Shared/Data/field_parameters.rds"))
+saveRDS(field_parameters, here("Data/field_parameters.rds"))
 
 
 # /*===========================================================
 #' # Create regression data
 # /*===========================================================
 # ! updated in field_with_design$data_file_name
-
-# field_parameters <- readRDS(here("Shared/Data/field_parameters.rds"))
-# field_with_design <- readRDS(here("Shared/Data/field_with_design.rds"))
 
 lapply(
   1:nrow(field_with_design),

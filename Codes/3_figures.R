@@ -33,8 +33,8 @@ setwd(here())
 # -----------------
 # load results data
 # -----------------
-pi_data <- readRDS(file = here("Shared", "Results", "pi_data.rds"))
-field_with_design <- readRDS(here("Shared", "Data", "field_with_design.rds"))
+pi_data <- readRDS(file = here("Results", "pi_data.rds"))
+field_with_design <- readRDS(here("Data", "field_with_design.rds"))
 
 
 #=== abbreviation of design name ===#
@@ -127,7 +127,7 @@ for(p in unique(pi_data$pRatio)){
 
     source(here("GitControlled/Codes/Modules",
                 "figure_boxplot_grouped_v2_loss.R"))
-    ggsave(file = here("Shared/Graph/boxplot",
+    ggsave(file = here("Graph/boxplot",
                        paste0("profits_boxplot_", f_size, "_", p, ".png")),
            height = 6, width = 10)
 }
@@ -153,7 +153,7 @@ for(p in unique(gdata$pRatio)){
             }
         }
         pair_df[is.na(pair_df)] <- ""
-        write.csv(pair_df, here(paste0('Shared/Graph/tables/profit_diff_', p, '_', md,'.csv')))
+        write.csv(pair_df, here(paste0('Graph/tables/profit_diff_', p, '_', md,'.csv')))
     }
 }
 
@@ -193,7 +193,7 @@ gdata <- mean_data[field_col==f_size,] %>%
 # -------------------------------
 source(here("GitControlled/Codes/Modules",
             "figure_mean_line_all_prices.R"))
-ggsave(file = here("Shared/Graph/mean_line", 
+ggsave(file = here("Graph/mean_line", 
                    paste0("profits_line_", f_size, "_by_model.png")),
        height=4, width=8)
 
@@ -203,7 +203,7 @@ ggsave(file = here("Shared/Graph/mean_line",
 # -------------------------------
 source(here("GitControlled/Codes/Modules",
             "figure_sd_line_all_prices.R"))
-ggsave(file = here("Shared/Graph/mean_line", 
+ggsave(file = here("Graph/mean_line", 
                    paste0("sd_line_", f_size, "_by_model.png")),
        height=4, width=8)
 
@@ -217,7 +217,7 @@ sd_data <- mean_data %>%
     #--- order
     .[order(`pLabel`, `GWR`),] %>%
     print()
-write.csv(sd_data, here('Shared/Graph/mean_line/sd_table.csv'))
+write.csv(sd_data, here('Graph/mean_line/sd_table.csv'))
 
 
 # -------------------------
@@ -234,7 +234,7 @@ write.csv(sd_data, here('Shared/Graph/mean_line/sd_table.csv'))
 #     .[order(field_col, GWR),] %>%
 #     .[field_col==144,] %>%
 #     print()
-# write.csv(extreme_percent, here('Shared/Graph/mean_line/extreme_percent.csv'))
+# write.csv(extreme_percent, here('Graph/mean_line/extreme_percent.csv'))
 
 
 
@@ -245,7 +245,7 @@ write.csv(sd_data, here('Shared/Graph/mean_line/sd_table.csv'))
 # ---------------------------
 # load spatial measures data
 # ---------------------------
-sm_df <- readRDS( here("Shared/Results/spatial_measure_results.rds") ) %>%
+sm_df <- readRDS( here("Results/spatial_measure_results.rds") ) %>%
     dplyr::select(field_col, design_name, spatial_results) %>%
     rowwise() %>%
     mutate(spatial_results =
@@ -304,7 +304,7 @@ for(m in c("GWR", "BRF", "CF")){
         #=== convert to profit loss
         .[, profit := (-1)*profit]
     source(here("GitControlled/Codes/Modules/figure_explain_across_designs_loss.R")) %>% print()
-    ggsave(file = here("Shared/Graph/explain",
+    ggsave(file = here("Graph/explain",
                        paste0("explain_across_designs_", m, ".png")),
            height=7.5,width=6.5,dpi=300)
 }
@@ -357,9 +357,9 @@ for(m in c("GWR", "BRF", "CF")){
 #' /*=========================================================================*/
 
 #=== load field sf and parameter data ===#
-field_parameters <- readRDS(here("Shared/Data/field_parameters.rds"))
-field_with_design <- readRDS(here("Shared/Data/field_with_design.rds"))
-mc_sim_results <- readRDS(here("Shared/Results", 
+field_parameters <- readRDS(here("Data/field_parameters.rds"))
+field_with_design <- readRDS(here("Data/field_with_design.rds"))
+mc_sim_results <- readRDS(here("Results", 
                                paste0("mc_sim_results.rds")))
 
 #=== which simulation round to graph ===#
@@ -386,12 +386,12 @@ for(par_name in c("b1", "b2", "Nk", "b0")){
     
     #--- spatial map:
     source(here("GitControlled/Codes/Modules/figure_par_map.R")) %>% print()
-    ggsave(file=here("Shared/Graph/map", paste0("true_pars_",par_name,".png") ),
+    ggsave(file=here("Graph/map", paste0("true_pars_",par_name,".png") ),
            height=3.1, width=7.2)
     
     #--- histogram map:
     source(here("GitControlled/Codes/Modules/figure_par_hist.R")) %>% print()
-    ggsave(file=here("Shared/Graph/map", paste0("hist_true_pars_",par_name,".png") ),
+    ggsave(file=here("Graph/map", paste0("hist_true_pars_",par_name,".png") ),
            height=4, width=7.2)
 }
 
@@ -403,7 +403,7 @@ field_cell <- data.table(field_cell) %>%
 #--- spatial map:
 par_name <- "EONR"
 source(here("GitControlled/Codes/Modules/figure_par_map.R")) %>% print()
-ggsave(file=here("Shared/Graph/map", paste0("true_pars_",par_name,".png") ),
+ggsave(file=here("Graph/map", paste0("true_pars_",par_name,".png") ),
        height=3.1, width=7.2)
 
 
@@ -485,7 +485,7 @@ ggplot() +
         legend.key = element_rect(colour = "black"),
         legend.text = element_text(size = 18)
     )
-ggsave(file=here("Shared/Graph/map/combine_Nrate_map_abrv.png"),
+ggsave(file=here("Graph/map/combine_Nrate_map_abrv.png"),
        height=8.35, width=14)
 
 
@@ -524,7 +524,7 @@ gdata_sf <- eonr_sf %>%
     .[!is.na(eonr), ] %>% 
     st_as_sf()
 source(here("GitControlled/Codes/Modules/map_eonr.R"))
-ggsave(file = here("Shared/Graph/map/pred_eonr.png"),
+ggsave(file = here("Graph/map/pred_eonr.png"),
        height=6.6,width=14.4)
 
 
@@ -554,7 +554,7 @@ gdata_sf <- yield_obs %>%
     #---merge to field sf---
     left_join(field_cell[, c("aunit_id")], ., by = c("aunit_id"))
 source(here("GitControlled/Codes/Modules/map_obs_yield.R"))
-ggsave(file = here("Shared/Graph/map/obs_yield.png"),
+ggsave(file = here("Graph/map/obs_yield.png"),
        height=6.6,width=14.4)
 
 

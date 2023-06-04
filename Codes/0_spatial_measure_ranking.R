@@ -1,14 +1,13 @@
 
-#' Select the high efficiency (best) and low efficiency (worst) designs
+#' Select the high-ranked and low-ranked designs
 #' within each design type of:
-#'   - Fixed strip (FS)
-#'   - Fixed block (FB)
-#'   - Latin square (L)
-#'   - Latin square with rate jump limitation (LJ)
+#'   - patterned strip
+#'   - patterned grid
+#'   - Latin square
 #' 
 #' The selection procedure is:
 #'   1. List all possible designs in the specific type;
-#'   2. Calculate the statistical efficiency measures (spatial balance, evenness, etc.);
+#'   2. Calculate the spatial property measures (spatial balance, evenness, etc.);
 #'   3. Get the average rank of each design over all measures.
 #' 
 #' Note: 
@@ -30,7 +29,7 @@ library(spatialreg)
 library(gstat)
 library(GWmodel)
 library(scam)
-library(mgcv)       # gam()
+library(mgcv)
 library(parallel)
 library(spdep)
 library(mgcv)
@@ -50,12 +49,12 @@ setwd(here())
 
 #=== Load functions ===#
 #* source all the functions in the Functions folder  
-fs::dir_ls(here("GitControlled", "Codes", "Functions"), full.names = TRUE) %>%
+fs::dir_ls(here("Codes", "Functions"), full.names = TRUE) %>%
     lapply(., function(x) source(x))
 
 #=== Load simulated data ===#
-field_data <- readRDS(here("Shared/Data/field_data.rds"))
-field_with_design <- readRDS(here("Shared/Data/field_with_design.rds"))
+field_data <- readRDS(here("Data/field_data.rds"))
+field_with_design <- readRDS(here("Data/field_with_design.rds"))
 
 plot_width = field_data$plot_width[1]
 plot_length = 12
@@ -110,7 +109,7 @@ spatial_measure_strip <-
     ) %>%
     rbindlist()
 toc()
-saveRDS(spatial_measure_strip, here("Shared", "Results","spatial_measure_strip.rds"))
+saveRDS(spatial_measure_strip, here("Results","spatial_measure_strip.rds"))
 
 
 ## ==========================================================
@@ -146,7 +145,7 @@ spatial_measure_strip2 <-
     ) %>%
     rbindlist()
 toc()
-saveRDS(spatial_measure_strip2, here("Shared", "Results","spatial_measure_strip2.rds"))
+saveRDS(spatial_measure_strip2, here("Results","spatial_measure_strip2.rds"))
 
 
 ## ============================
@@ -154,7 +153,7 @@ saveRDS(spatial_measure_strip2, here("Shared", "Results","spatial_measure_strip2
 ## ============================
 
 #=== single-block strip designs ===#
-spatial_measure_strip <- readRDS(here("Shared", "Results", "spatial_measure_strip.rds")) %>% 
+spatial_measure_strip <- readRDS(here("Results", "spatial_measure_strip.rds")) %>% 
     .[, GR := GR_row + GR_col] %>% 
     .[, GR_row := NULL] %>% 
     .[, GR_col := NULL] %>% 
@@ -184,7 +183,7 @@ spatial_measure_strip <- readRDS(here("Shared", "Results", "spatial_measure_stri
 }
 
 #=== twin-strip designs ===#
-spatial_measure_strip2 <- readRDS(here("Shared", "Results", "spatial_measure_strip2.rds")) %>% 
+spatial_measure_strip2 <- readRDS(here("Results", "spatial_measure_strip2.rds")) %>% 
     .[, GR := GR_row + GR_col] %>% 
     .[, GR_row := NULL] %>% 
     .[, GR_col := NULL] %>% 
@@ -231,8 +230,8 @@ df <-
 # ---------------------
 #  best strip
 # ---------------------
-source(here("GitControlled", "Codes", "Modules", "rank_strip_best.R"))
-ggsave(p_all, file=here("Shared", "Graph","design_select", "rank_strip_best.png"),
+source(here("Codes", "Modules", "rank_strip_best.R"))
+ggsave(p_all, file=here("Graph","design_select", "rank_strip_best.png"),
        height=2, width=6.5)
 
 #* best Latin selected for simulation
@@ -249,13 +248,13 @@ select_design_id[design=="strip" &
                      select=="best",
                  id] %>% `-`(1000) %>% 
     Strip_ls[[.]] %>% 
-    saveRDS(here("Shared", "Results", "strip_matrix_best.rds"))
+    saveRDS(here("Results", "strip_matrix_best.rds"))
 
 # ---------------------
 #  worst strip
 # ---------------------
-source(here("GitControlled", "Codes", "Modules", "rank_strip_worst.R"))
-ggsave(p_all, file=here("Shared", "Graph","design_select", "rank_strip_worst.png"),
+source(here("Codes", "Modules", "rank_strip_worst.R"))
+ggsave(p_all, file=here("Graph","design_select", "rank_strip_worst.png"),
        height=2, width=6.5)
 
 #* worst Latin selected for simulation
@@ -272,7 +271,7 @@ select_design_id[design=="strip" &
                      select=="worst",
                  id] %>% `-`(2000) %>% 
     Strip_ls[[.]] %>% 
-    saveRDS(here("Shared", "Results", "strip_matrix_worst.rds"))
+    saveRDS(here("Results", "strip_matrix_worst.rds"))
 
 
 
@@ -311,7 +310,7 @@ spatial_measure_FB <-
     ) %>%
     rbindlist()
 toc()
-saveRDS(spatial_measure_FB, here("Shared", "Results","spatial_measure_FB.rds"))
+saveRDS(spatial_measure_FB, here("Results","spatial_measure_FB.rds"))
 
 
 ## ============================
@@ -359,8 +358,8 @@ df <-
 #  best FB
 # ---------------------
 #same ranking module as the strip
-source(here("GitControlled", "Codes", "Modules", "rank_strip_best.R"))
-ggsave(p_all, file=here("Shared", "Graph","design_select", "rank_FB_best.png"),
+source(here("Codes", "Modules", "rank_strip_best.R"))
+ggsave(p_all, file=here("Graph","design_select", "rank_FB_best.png"),
        height=2, width=6.5)
 
 #* best FB selected for simulation
@@ -377,14 +376,14 @@ select_design_id[design=="FB" &
                      select=="best",
                  id] %>% 
     Strip_ls[[.]] %>% 
-    saveRDS(here("Shared", "Results", "FB_matrix_best.rds"))
+    saveRDS(here("Results", "FB_matrix_best.rds"))
 
 # ---------------------
 #  worst FB
 # ---------------------
 #same ranking module as the strip
-source(here("GitControlled", "Codes", "Modules", "rank_strip_worst.R"))
-ggsave(p_all, file=here("Shared", "Graph","design_select", "rank_FB_worst.png"),
+source(here("Codes", "Modules", "rank_strip_worst.R"))
+ggsave(p_all, file=here("Graph","design_select", "rank_FB_worst.png"),
        height=2, width=6.5)
 
 #* worst FB selected for simulation
@@ -401,7 +400,7 @@ select_design_id[design=="FB" &
                      select=="worst",
                  id] %>% 
     Strip_ls[[.]] %>% 
-    saveRDS(here("Shared", "Results", "FB_matrix_worst.rds"))
+    saveRDS(here("Results", "FB_matrix_worst.rds"))
 
 
 
@@ -440,7 +439,7 @@ N_levels <- 1:6
 #     ) %>%
 #     rbindlist()
 # toc()
-# saveRDS(spatial_measure_latin, here("Shared", "Results","spatial_measure_latin.rds"))
+# saveRDS(spatial_measure_latin, here("Results","spatial_measure_latin.rds"))
 
 #* Note: Latin square with jump limit is index = 297338
 
@@ -496,7 +495,7 @@ df <-
 # ------------------------------------
 #  Overall Best-ranked Latin square
 # ------------------------------------
-source(here("GitControlled", "Codes", "Modules", "rank_latin_best.R"))
+source(here("Codes", "Modules", "rank_latin_best.R"))
 
 #* compare all selection strategy in one graph
 library(ggpubr)
@@ -507,7 +506,7 @@ ggarrange(p_all,
           p_GR, 
           p_MST_neg,
           ncol = 1)
-ggsave(file=here("Shared", "Graph","design_select", paste0("rank_latin_best.png")),
+ggsave(file=here("Graph","design_select", paste0("rank_latin_best.png")),
        height=8, width=10)
 
 #* best Latin selected for simulation
@@ -524,12 +523,12 @@ select_design_id[design=="latin" &
                      select=="best",
                  id] %>% 
     Latin_ls[[.]] %>% 
-    saveRDS(here("Shared", "Results", "latin_matrix_best.rds"))
+    saveRDS(here("Results", "latin_matrix_best.rds"))
 
 # --------------------------------------
 #  Overall Worst-ranked Latin square
 # --------------------------------------
-source(here("GitControlled", "Codes", "Modules", "rank_latin_worst.R"))
+source(here("Codes", "Modules", "rank_latin_worst.R"))
 
 #* compare all selection strategy in one graph
 library(ggpubr)
@@ -540,7 +539,7 @@ ggarrange(p_all,
           p_GR, 
           p_MST_neg,
           ncol = 1)
-ggsave(file=here("Shared", "Graph","design_select", "rank_latin_worst.png"),
+ggsave(file=here("Graph","design_select", "rank_latin_worst.png"),
        height=8, width=10)
 
 #* worst Latin selected in simulation (use cascade Latin 297340)
@@ -557,7 +556,7 @@ select_design_id[design=="latin" &
                      select=="worst",
                  id] %>% 
     Latin_ls[[.]] %>% 
-    saveRDS(here("Shared", "Results", "latin_matrix_worst.rds"))
+    saveRDS(here("Results", "latin_matrix_worst.rds"))
 
 #* Note:
 #*   In fact, it seems 163953 (NB removed) is even worse than cascade, as its 
@@ -622,7 +621,7 @@ spatial_measure <-
     ) %>%
     rbindlist()
 toc()
-saveRDS(spatial_measure, here("Shared", "Results","spatial_measure_LJ.rds"))
+saveRDS(spatial_measure, here("Results","spatial_measure_LJ.rds"))
 
 
 ## ============================
@@ -660,7 +659,7 @@ df <-
 # ------------------------------------
 #  Best-ranked LJ
 # ------------------------------------
-source(here("GitControlled", "Codes", "Modules", "rank_latin_best.R"))
+source(here("Codes", "Modules", "rank_latin_best.R"))
 
 #* compare all selection strategy in one graph
 library(ggpubr)
@@ -671,7 +670,7 @@ ggarrange(p_all,
           p_GR, 
           p_MST_neg,
           ncol = 1)
-ggsave(file=here("Shared", "Graph","design_select", paste0("rank_LJ_best.png")),
+ggsave(file=here("Graph","design_select", paste0("rank_LJ_best.png")),
        height=8, width=10)
 
 #* best Latin selected for simulation
@@ -688,7 +687,7 @@ select_design_id[design=="LJ" &
                      select=="best",
                  id] %>% 
     Latin_ls[[.]] %>% 
-    saveRDS(here("Shared", "Results", "LJ_matrix_best.rds"))
+    saveRDS(here("Results", "LJ_matrix_best.rds"))
 #* Note:
 #*   There is no clear winner in the LJ ranking. The NB-excluded one actually
 #*   has very low NB ranking, and its GR and van_Es_var rankings are also not top.
@@ -701,106 +700,6 @@ select_design_id[design=="LJ" &
 #* don't need the worst LJ
 
 #===========================================================================================
-
-
-
-
-
-
-
-
-
-
-################################################################################
-###
-###                         Selecting by Normalized Values                   ###
-###
-################################################################################
-
-# #* result data table
-# select_design <- data.table(
-#     variable = character(),
-#     value = numeric(),
-#     remove = character(),
-#     id = numeric(),
-#     design = character(),
-#     select = character()
-# )
-# 
-# 
-# ## =======================
-# ##    Latin squares
-# ## =======================
-# spatial_measure_latin <- readRDS(here("Shared", "Results", "spatial_measure_latin.rds")) %>% 
-#     .[, GR := GR_row + GR_col] %>% 
-#     .[, GR_row := NULL] %>% 
-#     .[, GR_col := NULL] %>% 
-#     #=== value reset: small value means good ===#
-#     .[, MST_neg := MSTmin*(-1)] %>% 
-#     .[, MSTmin := NULL] %>% 
-#     .[, variation_neg := variation_N*(-1)] %>% 
-#     .[, variation_N := NULL] %>% 
-#     .[, variation_neg := NULL] 
-# 
-# spatial_measure_latin %>% 
-#     melt(id.vars = c("id")) %>% 
-#     ggplot(data = .) +
-#     geom_histogram(aes(x = value)) +
-#     facet_wrap(~ variable, ncol = 2, scales = "free")
-# 
-# 
-# # ---------------------
-# #  Normalize measures
-# # ---------------------
-# spatial_measure_latin %>% 
-#     melt(id.vars = c("id")) %>% 
-#     ggplot(data = .) +
-#     geom_histogram(aes(x = value)) +
-#     facet_wrap(~ variable, ncol = 2, scales = "free")
-# 
-# df <- 
-#     spatial_measure_latin %>% 
-#     # remove top 1%
-#     .[GR > quantile(GR, 0.05), ] %>% 
-#     .[MST_neg > quantile(MST_neg, 0.05), ] %>% 
-#     # reshape
-#     melt(id.vars = c("id")) %>% 
-#     # .[, value_nr := (value - min(value))/(max(value - min(value))), by = .(variable)] %>% 
-#     .[, value_nr := (value - mean(value))/(sd(value)), by = .(variable)] %>% 
-#     .[, mean_value := mean(value_nr), by = .(id)] %>% 
-#     print()
-# 
-# ggplot(data = df) +
-#     geom_histogram(aes(x = value_nr)) +
-#     facet_wrap(~ variable, ncol = 2, scales = "free")
-# 
-# 
-# # ------------------------------------
-# #  Overall Best Latin square
-# # ------------------------------------
-# source(here("Codes", "Modules", "normalized_latin_best.R"))
-# 
-# #* compare all selection strategy in one graph
-# library(ggpubr)
-# ggarrange(p_all,
-#           p_NB_gini, 
-#           p_moran_I,
-#           p_van_Es_var,
-#           p_GR, 
-#           p_MST_neg,
-#           ncol = 1)
-# ggsave(file=here("Graph","design_select", paste0("normalized_latin_best.png")),
-#        height=8, width=10)
-# 
-# select_design <- rbind(select_design,
-#                        select_df_comb %>% .[, design:="latin"] %>% .[, select:="best"])
-
-
-
-
-
-
-
 
 
 
