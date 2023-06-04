@@ -1,6 +1,6 @@
 # Instruction to reproduce the results in "paper title" published in Precision Agriculture
 
-This supplementary material contains the R codes to replicate the results of the simulation analysis conducted in the article. Please follow the steps below:
+This repository contains the R codes to replicate the figures, tables, and the results of the simulation analysis conducted in the article. Please follow the steps below:
 
 1. Clone the repository to your computer
 2. Open the R project file Econ_Trial_Design.Rproj 
