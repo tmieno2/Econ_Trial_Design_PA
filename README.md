@@ -1,4 +1,4 @@
-# Instruction to reproduce the results in "paper title" published in Precision Agriculture
+# Instruction to reproduce the results in "The Economic Performances of Different Trial Designs in On-Farm Precision Experimentation: A Monte Carlo Evaluation" published in Precision Agriculture
 
 This repository contains the R codes to replicate the figures, tables, and the results of the simulation analysis conducted in the article. Please follow the steps below:
 
