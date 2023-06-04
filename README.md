@@ -1,1 +1,1 @@
-# Econ_Trial_Design_PA
+# Instruction to reproduce the results in "paper title" published in Precision Agriculture
